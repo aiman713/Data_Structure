@@ -75,24 +75,24 @@ def fastest_way(start,end):
     distances = {c: float('inf') for c in stations}
     distances[start] = 0
     prev = {c: None for c in stations}
-    pq = [(0, start)]
+    pqueue = [(0, start)]
     
-    while pq:
-        d, cur = heapq.heappop(pq)
-        if cur == end:
+    while pqueue:
+        distance, cur_stat = heapq.heappop(pqueue)
+        if cur_stat == end:
             path = []
-            while cur:
-                path.insert(0, cur)
-                cur = prev[cur]
+            while cur_stat:
+                path.insert(0, cur_stat)
+                cur_stat = prev[cur_stat]
             return path, distances[end]
-        if d > distances[cur]:
+        if distance > distances[cur_stat]:
             continue
-        for nb, w in stations[cur].connections.items():
-            nd = d + w
-            if nd < distances[nb]:
-                distances[nb] = nd
-                prev[nb] = cur
-                heapq.heappush(pq, (nd, nb))
+        for neighbor, weight in stations[cur_stat].connections.items():
+            new_dis = distance + weight
+            if new_dis < distances[neighbor]:
+                distances[neighbor] = new_dis
+                prev[neighbor] = cur_stat
+                heapq.heappush(pqueue, (new_dis, neighbor))
     
     return None, float('inf')
 
